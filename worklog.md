@@ -56,3 +56,34 @@ Stage Summary:
 - 312 insertions, 169 deletions
 - Build compiles successfully
 - Pushed to GitHub as commit 5397123
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Redesign Work Breakdown Structure screen to match HTML design
+
+Work Log:
+- Analyzed HTML source code: mobile-first design with breadcrumbs, info banner, dropdown, suggest button, accordion, segment cards, notes, fixed bottom nav
+- Located WBS screen: work_breakdown_structure_screen.dart (1875 lines)
+- Read full file to understand all backend logic (AI generation, CRUD, context snapshot, PDF export, framework sync)
+- Updated color constants to match HTML brand tokens (6 colors updated, 6 new added)
+- Added _buildBreadcrumbsAndTitle(): "Planning Phase > Work Breakdown Structure" with title
+- Redesigned _buildInfoBanner(): light blue bg (#E8F0FE) with blue text (#1A73E8) and info icon
+- Replaced _buildCriteriaRow() → _buildControlsSection(): vertical stacked layout with full-width dropdown and gray "Suggest Structure" button
+- Redesigned _buildContextCard(): accordion with just header when collapsed
+- Replaced _buildWbsTreeView() → _buildWbsSegmentList(): vertical card list instead of horizontal tree
+- Replaced _buildWbsNodeCard() → _buildSegmentCard(): red top border, status dots (blue/gray), action icons with dividers
+- Added _buildStatusDot(): blue filled for completed/in_progress, gray outline for not_started
+- Replaced _buildNotesCard() → _buildNotesSection(): full-width (removed right alignment and maxWidth constraint)
+- Added _buildBottomNavigationBar(): fixed bottom bar with Back (white/outline) and Next (yellow) buttons
+- Redesigned build() method: Stack with scrollable content + fixed bottom nav
+- All backend logic preserved: AI generation, CRUD, context snapshot, PDF export, framework sync
+- Built successfully with `flutter build web --no-tree-shake-icons`
+- Committed as `c360069` and pushed to GitHub
+
+Stage Summary:
+- Complete UI redesign of WBS screen to match HTML design
+- 589 insertions, 488 deletions
+- All backend logic retained (OpenAI, Firebase, PDF, CRUD)
+- Build compiles successfully
+- Pushed to GitHub as commit c360069
