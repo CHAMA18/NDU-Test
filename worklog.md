@@ -193,3 +193,34 @@ Stage Summary:
 - File compiles with 0 errors, 0 warnings
 - Built successfully with `flutter build web --no-tree-shake-icons`
 - Committed as `c7fa648` and pushed to GitHub
+---
+Task ID: 1
+Agent: Main Agent
+Task: Add voice-to-text input to all text fields across the entire Ndu_Project Flutter application
+
+Work Log:
+- Explored codebase: found 118+ Dart files with TextField/TextFormField instances (~770+ total occurrences)
+- Identified 3 custom wrapper widgets (ExpandingTextField, AiSuggestingTextField, InlineEditableText)
+- Added speech_to_text: ^7.0.0 to pubspec.yaml (resolved to v7.4.0)
+- Added RECORD_AUDIO and INTERNET permissions to Android Manifest
+- Created iOS Info.plist with NSSpeechRecognitionUsageDescription and NSMicrophoneUsageDescription
+- Created VoiceInputService singleton (lib/services/voice_input_service.dart) for global speech recognition management with streams for results and status
+- Created VoiceTextField and VoiceTextFormField drop-in replacement widgets (lib/widgets/voice_text_field.dart) with mic suffix icon
+- Updated ExpandingTextField/ExpandingTextFormField to include voice input with enableVoice parameter
+- Updated AiSuggestingTextField to add voice mic button alongside AI suggest icon in suffixIcon row
+- Updated InlineEditableText to add voice mic button in editing mode action row
+- Wrote Python script to bulk-replace TextField(→VoiceTextField( and TextFormField(→VoiceTextFormField( across 160 files
+- Fixed 2 broken multi-line imports caused by the script (planning_contracting_screen.dart, planning_procurement_v2_screen.dart)
+- Added missing imports for speech_recognition_result.dart, speech_recognition_error.dart to voice_input_service.dart
+- Added flutter/services.dart import to voice_text_field.dart
+- Verified build: flutter analyze shows 0 errors from our changes (remaining 7 errors are pre-existing)
+- Flutter web build compiles successfully
+- Committed as 1e547f4 and pushed to GitHub
+
+Stage Summary:
+- Voice-to-text is now available on ALL text fields across the entire application
+- 169 files changed, 2840 insertions, 1230 deletions
+- Password/obscureText fields automatically disable voice input
+- Mic icon uses brand yellow (#FFB800) with animated listening state (filled mic icon + yellow glow circle)
+- Speech recognition uses dictation mode with 60s max listen time and 4s pause detection
+- Voice text is appended to existing field content with proper spacing
