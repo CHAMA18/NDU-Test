@@ -114,3 +114,30 @@ Stage Summary:
 - Mobile-first card layout with gold PREMIUM badge, billing info, legal links, and account actions
 - Bottom navigation bar on mobile with gold active state
 - All backend configuration retained and functional
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix app icon visibility across all platforms
+
+Work Log:
+- Investigated all icon configurations: web (favicon, PWA), Android (mipmap), iOS (AppIcon)
+- Found root cause: source `assets/icons/app_icon.png` was updated but `flutter_launcher_icons` was never re-run
+- All generated icons (Android mipmap, iOS AppIcon, web icons) were stale — using old icon version
+- Also found `web/favicon.ico` was missing entirely (only `favicon.png` existed)
+- Regenerated ALL platform icons from current `assets/icons/app_icon.png` using Pillow:
+  - Android: 5 density buckets × (ic_launcher + ic_launcher_round) = 10 icons
+  - Android: 5 density buckets × (ic_launcher_foreground + ic_launcher_background) = 10 adaptive icons
+  - iOS: 21 AppIcon sizes (20→1024px, all with alpha removed for iOS compliance)
+  - Web: favicon.png (32×32), Icon-192.png, Icon-512.png, Icon-maskable-192.png, Icon-maskable-512.png
+  - New: favicon.ico (multi-resolution: 16,32,48,64,128,256)
+- Updated `web/index.html` to reference both `favicon.ico` and `favicon.png` for max browser compatibility
+- Built Flutter web app successfully
+- Deployed to staging.nduproject.com and admin.nduproject.com
+
+Stage Summary:
+- All 51+ icon files regenerated from current app_icon.png source
+- favicon.ico created for first time — ensures browser tab icon works in all browsers
+- index.html now has dual favicon references: favicon.ico (type image/x-icon) + favicon.png (type image/png, sizes 32x32)
+- Commit: 97eabf8 on main branch (CHAMA18/Ndu_Project)
+- Deployed: staging.nduproject.com and admin.nduproject.com
