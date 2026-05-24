@@ -203,3 +203,32 @@ Stage Summary:
 - Build compiles successfully
 - All Critical and High severity issues resolved
 - Remaining Low/Medium issues documented for future work
+---
+Task ID: 2
+Agent: Main Agent
+Task: Ensure AI model prices are relative to the selected currency
+
+Work Log:
+- Analyzed the currency handling flow: CurrencyService, cost_analysis_screen, cost_estimate_screen, preferred_solution_analysis_screen
+- Found that `generateCostEstimateSuggestions` had no `currency` parameter
+- Found that `preferred_solution_analysis_screen` did not pass currency to `generateCostBreakdownForSolutions`
+- Found that AI prompts only mentioned currency code but did not instruct conversion from USD
+- Added exchange rate lookup table `_usdToCurrencyRates` (37 currencies) to openai_service_secure.dart
+- Added helper functions: `_usdRateHint`, `_convertHint`, `_currencyConversionInstruction`
+- Updated `generateCostEstimateSuggestions` to accept `currency` parameter
+- Updated `_costSuggestionsPrompt` to include currency conversion instructions
+- Updated `_costBreakdownPrompt` to include currency conversion instructions
+- Updated `_singleItemEstimatePrompt` to include currency conversion instructions
+- Updated `_benefitLineItemsPrompt` to include currency conversion instructions
+- Updated `_benefitSavingsPrompt` to include currency conversion instructions
+- Updated `cost_estimate_screen.dart` to pass `costBenefitCurrency` from projectData
+- Updated `preferred_solution_analysis_screen.dart` to pass `currency` to `generateCostBreakdownForSolutions`
+- Expanded `_currencyRates` in `cost_analysis_screen.dart` from 3 to 16 currencies
+- Updated currency dropdowns in `cost_analysis_screen.dart` to show all available currencies
+- Build compiles successfully
+
+Stage Summary:
+- AI model now receives explicit currency conversion instructions with exchange rate examples
+- When currency is not USD, the AI prompt says: "1 USD ≈ X CURRENCY" and gives a concrete conversion example
+- Currency dropdowns expanded from 4 to 16 options
+- Client-side currency conversion also expanded with more rates
