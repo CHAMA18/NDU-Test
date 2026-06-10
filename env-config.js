@@ -7,6 +7,9 @@ window.__ndu_env = {
   // Anthropic Claude API key (base64-encoded) — enables direct API access.
   // When decoded and set, all AI requests go directly to api.anthropic.com.
   // When missing/empty, requests route through the Firebase Cloud Function proxy.
-  _ak: "c2stYW50LWFwaTAzLWU2OElaT2Y2NFhueXF5YlVFcjlhbVk1Nmt6djE0NmRNcVBhWGF1cVJyVGdI" +
-       "TGlaS0NEdHVNTW9DSWpOaS1NLWlHQlp3bXJQdmtqUnNTSmVKSG1VWk9nLXdPR0UyUUFB"
+  //
+  // To enable direct access: paste your API key below (base64-encoded),
+  // e.g. echo -n "sk-ant-..." | base64
+  // The proxy is the recommended default — it keeps the key server-side.
+  _ak: ""
 };
