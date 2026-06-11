@@ -16,14 +16,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="NDU Project">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=1781181093">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=1781181093"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=1781181093"/>
 
   <title>NDU Project</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json?v=1781181093">
 
   <style>
     body {
@@ -66,12 +66,12 @@
   </div>
   <!-- Runtime environment config — loaded BEFORE Flutter so keys are
        available when EnvConfigLoader.load() runs in main(). -->
-  <script src="env-config.js?v=__NDU_VERSION__"></script>
+  <script src="env-config.js?v=1781181093"></script>
 
   <!-- Aggressive cache bust: always clear service workers & caches, then force-reload if stale -->
   <script>
     (function() {
-      var NDU_BUILD = '__NDU_VERSION__';
+      var NDU_BUILD = '1781181093';
       try {
         // Always unregister service workers to prevent stale caching
         if ('serviceWorker' in navigator) {
@@ -98,6 +98,6 @@
     })();
   </script>
 
-  <script src="flutter_bootstrap.js?v=__NDU_VERSION__" async></script>
+  <script src="flutter_bootstrap.js?v=1781181093" async></script>
 </body>
 </html>
