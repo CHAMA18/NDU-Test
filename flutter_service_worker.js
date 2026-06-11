@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'ndu-flutter-app-v1781194396';
+const CACHE_NAME = 'ndu-flutter-app-v1781195800';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

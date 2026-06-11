@@ -16,14 +16,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="NDU Project">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=1781194396">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=1781195800">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico?v=1781194396"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=1781194396"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=1781195800"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=1781195800"/>
 
   <title>NDU Project</title>
-  <link rel="manifest" href="manifest.json?v=1781194396">
+  <link rel="manifest" href="manifest.json?v=1781195800">
 
   <style>
     body {
@@ -66,38 +66,66 @@
   </div>
   <!-- Runtime environment config — loaded BEFORE Flutter so keys are
        available when EnvConfigLoader.load() runs in main(). -->
-  <script src="env-config.js?v=1781194396"></script>
+  <script src="env-config.js?v=1781195800"></script>
 
-  <!-- Aggressive cache bust: always clear service workers & caches, then force-reload if stale -->
+  <!-- ULTRA AGGRESSIVE cache bust: kill ALL service workers, clear ALL caches, force redirect -->
   <script>
     (function() {
-      var NDU_BUILD = '1781194396';
+      var NDU_BUILD = '1781195800';
       try {
-        // Always unregister service workers to prevent stale caching
+        // 1. Kill ALL service workers immediately (synchronous attempt)
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistrations().then(function(regs) {
-            regs.forEach(function(reg) { reg.unregister(); });
+            regs.forEach(function(reg) {
+              reg.unregister().then(function() {
+                console.log('[NDU] Killed service worker:', reg.scope);
+              });
+            });
           });
+          // Also prevent any new service worker from registering
+          navigator.serviceWorker.register = function() { return Promise.resolve(); };
         }
-        // Always clear Cache API entries
+
+        // 2. Nuke ALL Cache API entries
         if ('caches' in window) {
           caches.keys().then(function(names) {
-            names.forEach(function(name) { caches.delete(name); });
+            names.forEach(function(name) {
+              caches.delete(name).then(function() {
+                console.log('[NDU] Deleted cache:', name);
+              });
+            });
           });
         }
-        // Check if build version changed → hard reload with query param to bust all caches
-        var stored = localStorage.getItem('__ndu_build');
-        if (stored && stored !== NDU_BUILD) {
+
+        // 3. Clear ALL localStorage keys related to old builds
+        localStorage.removeItem('__ndu_build');
+
+        // 4. If this page was loaded WITHOUT a cache-busting param, redirect WITH one
+        //    This forces the browser to fetch fresh from server, bypassing any cached HTML/JS
+        var url = new URL(location.href);
+        if (!url.searchParams.has('_ndu')) {
+          url.searchParams.set('_ndu', NDU_BUILD);
           localStorage.setItem('__ndu_build', NDU_BUILD);
-          // Force reload with cache bypass
-          location.replace(location.href.split('?')[0] + '?v=' + NDU_BUILD);
+          location.replace(url.toString());
+          return; // Stop execution — page will reload
+        }
+
+        // 5. If the param exists but is from an OLD build, redirect with NEW param
+        var loadedBuild = url.searchParams.get('_ndu');
+        if (loadedBuild && loadedBuild !== NDU_BUILD) {
+          url.searchParams.set('_ndu', NDU_BUILD);
+          localStorage.setItem('__ndu_build', NDU_BUILD);
+          location.replace(url.toString());
           return;
         }
+
         localStorage.setItem('__ndu_build', NDU_BUILD);
-      } catch(e) {}
+      } catch(e) {
+        console.warn('[NDU] Cache bust error:', e);
+      }
     })();
   </script>
 
-  <script src="flutter_bootstrap.js?v=1781194396" async></script>
+  <script src="flutter_bootstrap.js?v=1781195800" async></script>
 </body>
 </html>
